@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-app
+spec:
+  destination:
+    name: in-cluster
+    namespace: argogit
+  project: default
+  source:
+    path: guestbook
+    repoURL: https://gitlab.com/mbanjum/argo/-/tree/main/guestbook
+    targetRevision: master
+  syncPolicy:
+    automated: {}
