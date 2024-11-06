@@ -64,7 +64,7 @@ jobs:
         sudo apt-get update && sudo apt-get install -y google-cloud-sdk
         # Install GKE auth plugin
         echo "Installing GKE gcloud auth plugin"
-        gcloud components install gke-gcloud-auth-plugin
+        apt-get install gke-gcloud-auth-plugin
 
     # 7. Deploy the Docker image to the GKE cluster
     - name: Deploy
