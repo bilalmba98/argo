@@ -33,7 +33,7 @@ jobs:
     # 4. Configure Docker login
     - name: Docker login
       run: |-
-        echo ${{ secrets.GCP_DOCKER }} | docker login -u oauth2accesstoken --password-stdin https://${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev
+        echo ${{ secrets.GCP_DOCKER }} | docker login -u oauth2accesstoken --password-stdin https://${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev
 
 
     # 4. Build and push the NGINX Docker image to Google Container Registry
