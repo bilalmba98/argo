@@ -35,18 +35,20 @@ jobs:
       run: |-
         echo ${{ secrets.GCP_DOCKER }} | docker login -u oauth2accesstoken --password-stdin https://${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev
 
+    # 5. Install GKE Auth Plugin (gke-gcloud-auth-plugin)
+    - name: Install GKE Auth Plugin
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
 
-    # 4. Build and push the NGINX Docker image to Google Container Registry
+    # 6. Build and push the NGINX Docker image to Google Container Registry
     - name: Build and push NGINX Docker image to GCR
       run: |
 
-        docker build -t me-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
-        docker push me-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
+        docker build -t ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
+        docker push ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
 
-        #docker build -t ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
-        #docker push ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
-
-    # 5. Deploy NGINX to GKE using kubectl
+    # 7. Deploy NGINX to GKE using kubectl
     - name: Deploy NGINX to GKE
       run: |
         kubectl apply -f k8s/nginx-deployment.yaml
