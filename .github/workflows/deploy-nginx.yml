@@ -1,0 +1,41 @@
+name: Deploy NGINX to GKE
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Checkout the repository code
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    # 2. Set up Google Cloud credentials
+    - name: Set up Google Cloud credentials
+      uses: google-github-actions/setup-gcloud@v3
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    # 3. Configure kubectl to interact with GKE
+    - name: Configure kubectl
+      run: |
+        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
+          --zone ${{ secrets.GKE_CLUSTER_ZONE }} \
+          --project ${{ secrets.GCP_PROJECT_ID }}
+
+    # 4. Build and push the NGINX Docker image to Google Container Registry
+    - name: Build and push NGINX Docker image to GCR
+      run: |
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/nginx:$GITHUB_SHA .
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/nginx:$GITHUB_SHA
+
+    # 5. Deploy NGINX to GKE using kubectl
+    - name: Deploy NGINX to GKE
+      run: |
+        kubectl apply -f k8s/nginx-deployment.yaml  # Assuming your deployment file is under k8s/ directory
+        kubectl set image deployment/nginx nginx=gcr.io/${{ secrets.GCP_PROJECT_ID }}/nginx:$GITHUB_SHA
