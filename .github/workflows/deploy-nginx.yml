@@ -58,20 +58,20 @@ jobs:
       run: |
         echo "Installing Google Cloud SDK and GKE Auth Plugin"
         
-        # Add the Google Cloud SDK's GPG key to avoid NO_PUBKEY error
-        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg
+        # Add the GPG key for the Google Cloud SDK repository
+        curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg > /dev/null
         
-        # Add Google Cloud SDK repository to the apt sources list
+        # Add the repository to apt sources
         echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
-        
-        # Update apt-get and install Google Cloud SDK
-        sudo apt-get update
-        sudo apt-get install -y google-cloud-sdk
 
-        # Install the GKE gcloud auth plugin
+        # Update apt and install the Google Cloud SDK
+        sudo apt-get update
+
+        # Install the GKE Auth plugin
         sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
+        
     # 7. Deploy the Docker image to the GKE cluster
-    - name: Deploy
+    - name: Deploy to GKE 
       run: |-
         cat ${{ vars.DEPLOYMENT_FILE }} | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
         kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
