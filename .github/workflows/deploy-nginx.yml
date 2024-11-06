@@ -35,7 +35,7 @@ jobs:
       run: |
 
         docker build -t ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:v1 .        
-        docker push ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:v1 .
+        docker push ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:v1 
 
     # 5. Deploy NGINX to GKE using kubectl
     - name: Deploy NGINX to GKE
