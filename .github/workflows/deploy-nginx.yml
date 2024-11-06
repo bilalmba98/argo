@@ -49,15 +49,15 @@ jobs:
         echo "Listing files in deploy directory:"
         ls -ltrh ./k8s || echo "Deploy directory not found"
 
-    # 6B. Install the GKE Auth Plugin via `gcloud`
-    - name: Install GKE gcloud auth plugin
-      run: |
-        sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
-
+#    # 6B. Install the GKE Auth Plugin via `gcloud`
+#    - name: Install GKE gcloud auth plugin
+#      run: |
+#        sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
+#
     # 7. Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
-        cat ${{ vars.DEPLOYMENT_FILE }} | envsubst | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
+        cat ${{ vars.DEPLOYMENT_FILE }} kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
         kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
         kubectl get services -o wide
 
