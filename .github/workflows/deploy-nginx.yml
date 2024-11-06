@@ -23,13 +23,6 @@ jobs:
         project_id: '${{ secrets.GCP_PROJECT_ID }}'
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-#    # 2. Set up Google Cloud credentials
-#    - name: Set up Google Cloud credentials
-#      uses: google-github-actions/setup-gcloud@v0.6.0  # Use the latest stable version
-#      with:
-#        project_id: ${{ secrets.GCP_PROJECT_ID }}
-#        credentials_json: ${{ secrets.GCP_SA_KEY }}
-#
     # 3. Configure kubectl to interact with GKE
     - name: Configure kubectl
       run: |
