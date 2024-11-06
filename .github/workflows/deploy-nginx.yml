@@ -34,8 +34,11 @@ jobs:
     - name: Build and push NGINX Docker image to GCR
       run: |
 
-        docker build -t ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
-        docker push ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
+        docker build -t me-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
+        docker push me-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
+
+        #docker build -t ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
+        #docker push ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
 
     # 5. Deploy NGINX to GKE using kubectl
     - name: Deploy NGINX to GKE
