@@ -47,7 +47,7 @@ jobs:
       run: |
         echo "Current directory: $(pwd)"
         echo "Listing files in deploy directory:"
-        ls -l ./deploy || echo "Deploy directory not found"
+        ls -ltrh ./k8s || echo "Deploy directory not found"
 
     # 7. Deploy NGINX to GKE using kubectl
     - name: Deploy NGINX to GKE
