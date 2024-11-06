@@ -42,6 +42,13 @@ jobs:
         docker build -t ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
         docker push ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
 
+    # 6A. debug
+    - name: Debugging - List deploy directory
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "Listing files in deploy directory:"
+        ls -l ./deploy || echo "Deploy directory not found"
+
     # 7. Deploy NGINX to GKE using kubectl
     - name: Deploy NGINX to GKE
       run: |
