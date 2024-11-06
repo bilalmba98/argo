@@ -41,5 +41,5 @@ jobs:
     - name: Deploy NGINX to GKE
       run: |
         kubectl apply -f k8s/nginx-deployment.yaml
-        kubectl set image deployment/nginx nginx=gcr.io/${{ secrets.GCP_PROJECT_ID }}/test/nginx:v1
+        kubectl set image deployment/nginx nginx=${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:v1
 
