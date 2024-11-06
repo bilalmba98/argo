@@ -34,12 +34,12 @@ jobs:
     - name: Build and push NGINX Docker image to GCR
       run: |
 
-        docker build -t ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:$GITHUB_SHA .        
-        docker push ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:$GITHUB_SHA 
+        docker build -t ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:$SHORT_SHA .        
+        docker push ${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:$SHORT_SHA 
 
     # 5. Deploy NGINX to GKE using kubectl
     - name: Deploy NGINX to GKE
       run: |
         kubectl apply -f k8s/nginx-deployment.yaml
-        kubectl set image deployment/nginx nginx=${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:$GITHUB_SHA
+        kubectl set image deployment/nginx nginx=${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:$SHORT_SHA
 
