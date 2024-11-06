@@ -57,7 +57,7 @@ jobs:
     # 7. Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
-        cat ${{ vars.DEPLOYMENT_FILE }} kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
+        cat ${{ vars.DEPLOYMENT_FILE }} | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
         kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
         kubectl get services -o wide
 
