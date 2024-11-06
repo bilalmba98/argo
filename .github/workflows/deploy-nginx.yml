@@ -49,9 +49,11 @@ jobs:
         echo "Listing files in deploy directory:"
         ls -ltrh ./k8s || echo "Deploy directory not found"
 
-    # 7. Deploy NGINX to GKE using kubectl
-    - name: Deploy NGINX to GKE
-      run: |
-        kubectl apply -f k8s/nginx-deployment.yaml
-        kubectl set image deployment/nginx nginx=${{ secrets.GKE_CLUSTER_ZONE }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1
+    # 7. Deploy the Docker image to the GKE cluster
+    - name: Deploy
+      run: |-
+        #sed -i "s#image: .*#image: ${{ vars.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/test/${{ vars.#### }}:$GITHUB_SHA#g" ${{ vars.####### }}
+        cat ${{ vars.DEPLOYMENT_FILE }} | envsubst | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
+        kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
+        kubectl get services -o wide
 
