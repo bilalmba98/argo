@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: gcr.io/nginx/nginx:latest  # Use the image built by the GitHub Action
+        image: me-central1-docker.pkg.dev/dinar-0092/test/nginx:1
         ports:
         - containerPort: 80
 ---
