@@ -43,18 +43,18 @@ jobs:
 #        project_id: '${{ secrets.GCP_PROJECT_ID }}'
 #        credentials_json: '${{ secrets.GCP_SA_KEY }}'
 #
-#  # 4. Configure Docker login
-#    - name: Docker login
-#      run: |-
-#        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev
-#
-#    # 6. Build and push the NGINX Docker image to Google Container Registry
-#    - name: Build and push NGINX Docker image to GCR
-#      run: |
-#
-#        docker build -t ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
-#        docker push ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
-#
+    # 4. Configure Docker login
+    - name: Docker login
+      run: |-
+        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev
+
+    # 6. Build and push the NGINX Docker image to Google Container Registry
+    - name: Build and push NGINX Docker image to GCR
+      run: |
+
+        docker build -t ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
+        docker push ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
+
 #    # 6A. debug
 #    - name: Debugging - List deploy directory
 #      run: |
@@ -69,11 +69,11 @@ jobs:
 #          --zone ${{ secrets.GKE_CLUSTER_ZONE }} \
 #          --project ${{ secrets.GCP_PROJECT_ID }}
 #
-#    # 7. Deploy the Docker image to the GKE cluster
-#    - name: Deploy to GKE 
-#      run: |-
-#        kubectl apply -f ./k8s/nginx-deployment.yaml
-#        cat ${{ vars.DEPLOYMENT_FILE }} | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
-#        kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
-#        kubectl get services -o wide
+    # 7. Deploy the Docker image to the GKE cluster
+    - name: Deploy to GKE 
+      run: |-
+        kubectl apply -f ./k8s/nginx-deployment.yaml
+        cat ${{ vars.DEPLOYMENT_FILE }} | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
+        kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
+        kubectl get services -o wide
 
