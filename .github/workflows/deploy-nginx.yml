@@ -33,7 +33,8 @@ jobs:
     # 4. Configure Docker login
     - name: Docker login
       run: |-
-        echo ${{ secrets.GCP_DOCKER }} | docker login -u oauth2accesstoken --password-stdin https://${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev
+        echo gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev
+#        echo ${{ secrets.GCP_DOCKER }} | docker login -u oauth2accesstoken --password-stdin https://${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev
 
     # 6. Build and push the NGINX Docker image to Google Container Registry
     - name: Build and push NGINX Docker image to GCR
@@ -42,38 +43,18 @@ jobs:
         docker build -t ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 .        
         docker push ${{ secrets.GCP_GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/test/nginx:1 
 
-    # 6A. debug
-    - name: Debugging - List deploy directory
-      run: |
-        echo "Current directory: $(pwd)"
-        echo "Listing files in deploy directory:"
-        ls -ltrh ./k8s || echo "Deploy directory not found"
-
-#    # 6B. Install the GKE Auth Plugin via `gcloud`
-#    - name: Install GKE gcloud auth plugin
+#    # 6A. debug
+#    - name: Debugging - List deploy directory
 #      run: |
-#        sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
-#
-    - name: Install Google Cloud SDK and GKE Auth Plugin
-      run: |
-        echo "Installing Google Cloud SDK and GKE Auth Plugin"
-        
-        # Add the GPG key for the Google Cloud SDK repository
-        curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.gpg > /dev/null
-        
-        # Add the repository to apt sources
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
-
-        # Update apt and install the Google Cloud SDK
-        sudo apt-get update
-
-        # Install the GKE Auth plugin
-        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-        
+#        echo "Current directory: $(pwd)"
+#        echo "Listing files in deploy directory:"
+#        ls -ltrh ./k8s || echo "Deploy directory not found"
+       
     # 7. Deploy the Docker image to the GKE cluster
     - name: Deploy to GKE 
       run: |-
-        cat ${{ vars.DEPLOYMENT_FILE }} | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
-        kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
-        kubectl get services -o wide
+        kubectl apply -f ./k8s/nginx-deployment.yaml
+#        cat ${{ vars.DEPLOYMENT_FILE }} | kubectl -n ${{ vars.ENVIRONMENT }} apply -f -
+#        kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }} -n ${{ vars.ENVIRONMENT }}
+#        kubectl get services -o wide
 
