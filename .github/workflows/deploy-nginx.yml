@@ -25,24 +25,15 @@ jobs:
         token_format: 'access_token'
         workload_identity_provider: 'projects/930524074535/locations/global/workloadIdentityPools/git-actions-pool/providers/github'
         service_account: 'github@dinar-0092.iam.gserviceaccount.com'
-#
-#    - name: Check out code
-#      uses: actions/checkout@v3
-#
-#    - name: Set up GKE credentials
-#      uses: google-github-actions/get-gke-credentials@v2
-#      with:
-#        cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
-#        location: ${{ secrets.GKE_CLUSTER_ZONE }}
-#
-#    # 2. Set up Google Cloud credentials 
-#    - name: Setup up GCP Credentials
-#      id: 'auth'
-#      uses: 'google-github-actions/auth@v0'
-#      with:
-#        project_id: '${{ secrets.GCP_PROJECT_ID }}'
-#        credentials_json: '${{ secrets.GCP_SA_KEY }}'
-#
+
+    # 2. Get the GKE credentials so we can deploy to the cluster
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v2
+      with:
+        cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+        location: ${{ secrets.GKE_CLUSTER_ZONE }}
+
+
     # 4. Configure Docker login
     - name: Docker login
       run: |-
@@ -61,14 +52,7 @@ jobs:
 #        echo "Current directory: $(pwd)"
 #        echo "Listing files in deploy directory:"
 #        ls -ltrh ./k8s || echo "Deploy directory not found"
-#      
-#    # 6AA. Configure kubectl to interact with GKE
-#    - name: Configure kubectl
-#      run: |
-#        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
-#          --zone ${{ secrets.GKE_CLUSTER_ZONE }} \
-#          --project ${{ secrets.GCP_PROJECT_ID }}
-#
+
     # 7. Deploy the Docker image to the GKE cluster
     - name: Deploy to GKE 
       run: |-
