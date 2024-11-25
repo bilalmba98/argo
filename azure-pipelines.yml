@@ -4,16 +4,19 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+- azure-pipelines
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: Kubernetes@1
+  inputs:
+    connectionType: 'KubernetesServiceConnection'
+    kubernetesServiceEndpoint: 'gcp-dinar-development-development-1732535429861'  
+    namespace: 'default'
+    command: 'apply'
+    arguments: '-f $(Build.SourcesDirectory)/nginx-deployment.yaml'
+    containerName: 'nginx'
+    secretName: 'nginx-secret'
+

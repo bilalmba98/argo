@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: nginx
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: nginx
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: me-central1-docker.pkg.dev/dinar-0092/test/nginx:1
+        image: nginx:latest
         ports:
         - containerPort: 80
 ---
@@ -29,4 +29,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: LoadBalancer  # Exposes the service externally
+  type: ClusterIP  # Exposes the service externally
