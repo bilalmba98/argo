@@ -23,5 +23,5 @@ steps:
     action: 'deploy'
     connectionType: 'kubernetesServiceConnection'
     kubernetesServiceConnection: 'gcp-deinar-development-development-1732605281364'
-    namespace: 'development'
+    namespace: 'default'
     manifests: 'nginx-deployment.yaml'
